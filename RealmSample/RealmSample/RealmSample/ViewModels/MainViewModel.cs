@@ -2,8 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Realms;
 using RealmSample.Interfaces;
 using RealmSample.Models;
+using Xamarin.Forms;
 
 namespace RealmSample.ViewModels
 {
@@ -29,26 +31,37 @@ namespace RealmSample.ViewModels
         #region Methods
         public override async Task Init()
         {
-            var test = _personService.GetAll().ToList();
-            People = new ObservableCollection<Person>(test);
+            var currentRealm = Realm.GetInstance();
 
-            _personService.Insert(new Person
+            currentRealm.Write(() =>
             {
-                FirstName = "Chad",
-                LastName = "Smith"
+                currentRealm.Add(new Person
+                {
+                    FirstName = "Chad",
+                    LastName = "Smith",
+                    Age = 27,
+                    Email = "Smith.Chad12@gmail.com",
+                    PhoneNumber = "2147296420"
+                });
+                currentRealm.Add(new Person
+                {
+                    FirstName = "Maria",
+                    LastName = "Lopez",
+                    Age = 27,
+                    Email = "Smith.Chad12@gmail.com",
+                    PhoneNumber = "2147296420"
+                });
+                currentRealm.Add(new Person
+                {
+                    FirstName = "Priscilla",
+                    LastName = "Gonzalez",
+                    Age = 27,
+                    Email = "Smith.Chad12@gmail.com",
+                    PhoneNumber = "2147296420"
+                });
             });
-            _personService.Insert(new Person
-            {
-                FirstName = "Maria",
-                LastName = "Lopez"
-            });
-            _personService.Insert(new Person
-            {
-                FirstName = "Priscilla",
-                LastName = "Gonzalez"
-            });
-            // Todo: Grab the people from Realm Here
-            var people = _personService.GetAll();
+
+            var people = currentRealm.All<Person>();
 
             if (people != null)
             {

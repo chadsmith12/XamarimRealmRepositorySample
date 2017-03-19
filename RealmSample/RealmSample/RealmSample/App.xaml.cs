@@ -39,6 +39,11 @@ namespace RealmSample
                 MigrationCallback = RealmConfigure.MigrationCallback,
             });
 
+            CurrentRealm.Write(() =>
+            {
+                CurrentRealm.RemoveAll();
+            });
+            
             // Register all the our core services with the kernal
             Kernal = new StandardKernel(new CoreModule(), new NavigationModule(mainPage.Navigation));
             // Register all of our platform specific modules with the kernal

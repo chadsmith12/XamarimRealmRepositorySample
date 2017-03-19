@@ -1,4 +1,7 @@
 ﻿using Ninject.Modules;
+using RealmSample.Interfaces;
+using RealmSample.Services;
+using RealmSample.ViewModels;
 
 namespace RealmSample.Modules
 {
@@ -19,11 +22,13 @@ namespace RealmSample.Modules
             // Bind ViewModels here
             // Example:
             // Bind<MainViewModel>().ToSelf();
+            Bind<MainViewModel>().ToSelf();
 
             // Bind Core Services
             // Example:
             // var dataService = new DataService();
             // Bind<IDataService>().ToMethod(x => dataService);
+            Bind<IPersonService>().ToMethod(x => new PersonService());
         }
     }
 }

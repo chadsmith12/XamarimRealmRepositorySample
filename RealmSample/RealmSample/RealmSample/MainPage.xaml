@@ -3,9 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:RealmSample"
              x:Class="RealmSample.MainPage">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <OnPlatform x:TypeArguments="x:Int32"
+                        x:Key="RowHeight"
+                        iOS="60"
+                        Android="60"
+                        WinPhone="85"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-	<Label Text="Welcome to Xamarin Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+    <Grid>
+        <ListView ItemsSource="{Binding People}"
+                  RowHeight="{StaticResource RowHeight}"
+                  ItemTapped="PeronTapped">
 
+            <!-- Set the Item Template -->
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout Padding="5 ,0, 0, 0"
+                                         VerticalOptions="Center"
+                                         HorizontalOptions="StartAndExpand">
+                                <Label Text="{Binding FirstName}"
+                                       FontAttributes="Bold"
+                                       FontSize="Medium"></Label>
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </ContentPage>

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Ninject;
+﻿using Ninject;
 using Ninject.Modules;
+using Realms;
 using RealmSample.Modules;
+using RealmSample.RealmData;
+using RealmSample.ViewModels;
 using Xamarin.Forms;
 
 namespace RealmSample
@@ -20,17 +19,33 @@ namespace RealmSample
         /// </value>
         public IKernel Kernal { get; set; }
 
+        /// <summary>
+        /// Gets the current realm database that the application is working with.
+        /// </summary>
+        /// <value>
+        /// The current realm database.
+        /// </value>
+        public Realms.Realm CurrentRealm { get; }
+
         public App(params INinjectModule[] patformModules)
         {
             InitializeComponent();
             var mainPage = new NavigationPage(new MainPage());
+
+            // setup and get an instance to our current Realm
+            CurrentRealm = Realms.Realm.GetInstance(new RealmConfiguration
+            {
+                SchemaVersion = RealmConfigure.SchemaVersion,
+                MigrationCallback = RealmConfigure.MigrationCallback,
+            });
 
             // Register all the our core services with the kernal
             Kernal = new StandardKernel(new CoreModule(), new NavigationModule(mainPage.Navigation));
             // Register all of our platform specific modules with the kernal
             Kernal.Load(patformModules);
 
-            MainPage = new MainPage();
+            mainPage.BindingContext = Kernal.Get<MainViewModel>();
+            MainPage = mainPage;
         }
 
         protected override void OnStart()
@@ -40,7 +55,7 @@ namespace RealmSample
 
         protected override void OnSleep()
         {
-            // Handle when your app sleeps
+            CurrentRealm.RemoveAll();
         }
 
         protected override void OnResume()
